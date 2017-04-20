@@ -120,6 +120,7 @@
     <ClCompile Include="Ai_BFS.cpp" />
     <ClCompile Include="applybody.cpp" />
     <ClCompile Include="AvatarProperty.cpp" />
+    <ClCompile Include="Collision_Detaction.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="loadImage.cpp" />
@@ -129,14 +130,18 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="zombie.cpp" />
     <ClCompile Include="zombieAI.cpp" />
+    <ClCompile Include="ZombieAI_Chase.cpp" />
     <ClCompile Include="zombieRule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ai_BFS.h" />
     <ClInclude Include="applyBody.h" />
     <ClInclude Include="AvatarProperty.h" />
+    <ClInclude Include="Avatar_Status.h" />
+    <ClInclude Include="Collision_Detaction.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="ZombieAI_Chase.h" />
     <ClInclude Include="zombieRule.h" />
     <ClInclude Include="loadImage.h" />
     <ClInclude Include="maps.h" />

@@ -20,20 +20,16 @@ Main cpp
 #include "maps.h"
 #include "loadImage.h"
 #include "GameData.h"
+#include "Avatar_Status.h"
+
 
 sf::RenderWindow window(sf::VideoMode(1200, 600), "First game");
 b2World* world;
-applyBody bodyApplier;
+//applyBody bodyApplier;
 sf::Font font;
 
-enum Avatar_Status {
-	dead,
-	ground,
-	air
-};
-
-static Avatar_Status player_status = ground;
-static Avatar_Status zombie_Status = ground;
+static Avatar_Status player_status = GROUND;
+static Avatar_Status zombie_Status = GROUND;
 typedef void(*collision_handler)();
 
 collision_handler table[10][10] = { nullptr, };
@@ -72,76 +68,66 @@ class MyContactListener : public b2ContactListener {
 
 void on_zombie_human_collide()
 {
-	player_status = dead;
+	player_status = DEAD;
 }
 void human_ground_collide()
 {
-	player_status = ground;
+	player_status = GROUND;
 }
 
 sf::VertexArray* vertices;
 bool detact = false;
 bool detactWall = false;
 
-
-void drawReflectedRay(b2Vec2 p1, b2Vec2 p2)
-{
-	//set up input
-	b2RayCastInput input;
-	input.p1 = p1;
-	input.p2 = p2;
-	input.maxFraction = 1;
-	
-	//check every fixture of every body to find closest
-	float closestFraction = 1; //start with end of line as p2
-	b2Vec2 intersectionNormal(0, 0);
-	b2Vec2 intersectionPoint(0, 0);
-	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext()) {
-		for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
-
-			b2RayCastOutput output;
-			if (!f->RayCast(&output, input,0))
-				continue;
-			if (output.fraction < closestFraction) {
-				closestFraction = output.fraction;
-				intersectionNormal = output.normal;
-			}
-
-			if (b->GetUserData() == (int*)1)
-				detact = true;
-			else if (b->GetUserData() == (int*)4)
-			{
-				detactWall = true;
-			}
-		}
-	}
-	intersectionPoint = p1 + closestFraction * (p2 - p1);
-
-/*
-	glBegin(GL_LINES);
-	glVertex2f(p1.x, p1.y);
-	glVertex2f(intersectionPoint.x, intersectionPoint.y);
-	glEnd();*/
-
-/*
-	vertices[0] = sf::Vertex(sf::Vector2f(p1.x, p1.y));
-	vertices[1] = sf::Vertex(sf::Vector2f(intersectionPoint.x, intersectionPoint.y));*/
-
-	vertices->append(sf::Vertex(sf::Vector2f(p1.x, p1.y)));
-	vertices->append(sf::Vertex(sf::Vector2f(intersectionPoint.x, intersectionPoint.y)));
-	if (closestFraction == 1)
-		return; //ray hit nothing so we can finish here
-	if (closestFraction == 0)
-		return;
-	//still some ray left to reflect
-
-	b2Vec2 remainingRay = (p2 - intersectionPoint);
-	b2Vec2 projectedOntoNormal = b2Dot(remainingRay, intersectionNormal) * intersectionNormal;
-	b2Vec2 nextp2 = p2 - 2 * projectedOntoNormal;
-
-	//recurse
-
-}
+//
+//void drawReflectedRay(b2Vec2 p1, b2Vec2 p2)
+//{
+//	//set up input
+//	b2RayCastInput input;
+//	input.p1 = p1;
+//	input.p2 = p2;
+//	input.maxFraction = 1;
+//	
+//	//check every fixture of every body to find closest
+//	float closestFraction = 1; //start with end of line as p2
+//	b2Vec2 intersectionNormal(0, 0);
+//	b2Vec2 intersectionPoint(0, 0);
+//	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext()) {
+//		for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
+//
+//			b2RayCastOutput output;
+//			if (!f->RayCast(&output, input,0))
+//				continue;
+//			if (output.fraction < closestFraction) {
+//				closestFraction = output.fraction;
+//				intersectionNormal = output.normal;
+//			}
+//
+//			if (b->GetUserData() == (int*)1)
+//				detact = true;
+//			else if (b->GetUserData() == (int*)4)
+//			{
+//				detactWall = true;
+//			}
+//		}
+//	}
+//	intersectionPoint = p1 + closestFraction * (p2 - p1);
+//
+//	vertices->append(sf::Vertex(sf::Vector2f(p1.x, p1.y)));
+//	vertices->append(sf::Vertex(sf::Vector2f(intersectionPoint.x, intersectionPoint.y)));
+//	if (closestFraction == 1)
+//		return; //ray hit nothing so we can finish here
+//	if (closestFraction == 0)
+//		return;
+//	//still some ray left to reflect
+//
+//	b2Vec2 remainingRay = (p2 - intersectionPoint);
+//	b2Vec2 projectedOntoNormal = b2Dot(remainingRay, intersectionNormal) * intersectionNormal;
+//	b2Vec2 nextp2 = p2 - 2 * projectedOntoNormal;
+//
+//	//recurse
+//
+//}
 
 
 int main()
@@ -155,12 +141,16 @@ int main()
 	
 	b2Vec2 gravity(0.0f, -80.f);
 	world = new b2World(gravity);
-	
+
+	TileMap buildmap;
 	maps tilemap;
 	int *tile = tilemap.getmap();
-	TileMap buildmap= bodyApplier.applyMapTile(
+	/*TileMap buildmap= bodyApplier.applyMapTile(
 		"tileset.jpg", sf::Vector2u(32, 32), tile, 20, 10,
-		world, gameData);
+		world, gameData);*/
+	if(!buildmap.load("tileset.jpg", sf::Vector2u(32, 32), tile, 20, 10,
+		world, gameData))
+		exit(1);
 	buildmap.setScale(0.5f,0.5f);
 	window.setFramerateLimit(60U);
 
@@ -228,10 +218,10 @@ int main()
 			dbug->setPosition(z_sprite->getPosition());
 		}
 		
-		if (player_status == dead)
+		if (player_status == DEAD)
 		{
 			body->SetTransform(b2Vec2(100.f, 50.f), 0);
-			player_status = air;
+			player_status = JUMP;
 		}
 		world->Step(timestep, velocityIterations, positionIterations);
 		while (window.pollEvent(event))
@@ -273,15 +263,15 @@ int main()
 					zombie_AI.defaultPatrol(z_body, _zombie1,b2Vec2(0,0));
 
 				else if (z_body->GetPosition().x <= _zombie1->leftEnd)
-					zombie_AI.defaultPatrol(z_body, _zombie1, b2Vec2(50, z_body->GetLinearVelocity().y));
+					zombie_AI.defaultPatrol(z_body, _zombie1, b2Vec2(CHASE_PLAYER, z_body->GetLinearVelocity().y));
 			
 				else if (z_body->GetPosition().x >= _zombie1->rightEnd)
-					zombie_AI.defaultPatrol(z_body, _zombie1, b2Vec2(-50, z_body->GetLinearVelocity().y));
+					zombie_AI.defaultPatrol(z_body, _zombie1, b2Vec2(-(CHASE_PLAYER), z_body->GetLinearVelocity().y));
 
 			}
 			else
 			{
-				zombie_AI.chase(z_body, body);
+ 				zombie_AI.chase(z_body, body);
 			}
 		}
 		////////////////////////////////////
@@ -306,11 +296,11 @@ int main()
 		{
 			switch (player_status)
 			{
-			case air:
+			case JUMP:
 				break;
-			case ground:
+			case GROUND:
 				move.movePlayer(body, UP);
-				player_status = air;
+				player_status = JUMP;
 				break;
 			}
 		}

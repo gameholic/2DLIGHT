@@ -63,3 +63,12 @@ sf::Sprite *zombie::getSprite() { return &z_Sprite; }
 sf::Texture zombie::getTexture() { return z_Texture; }
 b2Body* zombie::getBody() { return z_body; }
 b2Vec2 zombie::getOriPosition() { return ori_position; }
+
+void zombie::setStatus(Avatar_Status a_status) 
+{
+	currentStatus = a_status;
+}
+Avatar_Status zombie::getStatus() 
+{
+	return currentStatus;
+}

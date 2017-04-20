@@ -10,17 +10,10 @@ zombieAI.cppp
 
 
 zombieAI::zombieAI(GameData* _gamedata, movement _move)
-	:gameData(_gamedata), move(_move),rule(_gamedata) {
+	:gameData(_gamedata), move(_move),rule(_gamedata), _Chase(_move){
 
 	//zombieRule rule(gameData);
 }
-//
-//void zombieAI::setIndex(int index)
-//{
-//	zombie_index = index;
-//	move.setIndex(index);
-//	rule.setIndex(index);
-//}
 
 void zombieAI::defaultPatrol(b2Body* z_body, zombie* _zombie,b2Vec2 set_speed)
 {
@@ -160,17 +153,25 @@ void zombieAI::runToGoal(b2Body * zombie, b2Vec2 dest_position)
 //	if (status.detact_player)
 //		chase( z_body, p_body);
 //}
+
+
+
+//void zombieAI::chase(b2Body * z_body, b2Body * p_body)
+//{
+//	b2Vec2 zombie_position = z_body->GetPosition();
+//	b2Vec2 dest_position = p_body->GetPosition();
+//	moveDir tmp_x_dir, tmp_y_dir;
+//	do
+//	{
+//		tmp_x_dir =rule.x_chase(zombie_position, dest_position);
+//		tmp_y_dir = rule.y_chase(zombie_position, dest_position);
+//		move.moveZombie_default(z_body, tmp_x_dir);
+//		if (status.detact_wall)
+//			move.moveZombie_default(z_body, tmp_y_dir);
+//	} while (zombie_position == dest_position);	
+//}
+
 void zombieAI::chase(b2Body * z_body, b2Body * p_body)
 {
-	b2Vec2 zombie_position = z_body->GetPosition();
-	b2Vec2 dest_position = p_body->GetPosition();
-	moveDir tmp_x_dir, tmp_y_dir;
-	do
-	{
-		tmp_x_dir =rule.x_chase(zombie_position, dest_position);
-		tmp_y_dir = rule.y_chase(zombie_position, dest_position);
-		move.moveZombie_default(z_body, tmp_x_dir);
-		if (status.detact_wall)
-			move.moveZombie_default(z_body, tmp_y_dir);
-	} while (zombie_position == dest_position);
+	_Chase.chase(z_body, p_body, status);
 }

@@ -3,7 +3,7 @@
 
 int GameData::zombie_count;
 GameData::GameData()
-	:  _zombie(new zombie*[3]),
+	:  _zombie(new zombie*[MAX_ZOMBIE_NUMBER]),
 	_player (new Player*){}
 
 //GameData::GameData(int i)

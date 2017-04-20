@@ -1,6 +1,5 @@
 #include "Player.h"
 #include "global.h"
-
 Player::Player( float _x, float _y, float _density, float _friction) 
 {
 	plySprite = imageLoad.getPlyrSprite();
@@ -56,3 +55,13 @@ b2Body* Player::getBody() {
 	return plyBody;
 
 }
+
+void Player::setStatus(Avatar_Status a_status)
+{
+	currentStatus = a_status;
+}
+Avatar_Status Player::getStatus()
+{
+	return currentStatus;
+}
+

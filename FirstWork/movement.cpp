@@ -2,6 +2,7 @@
 #include "global.h"
 #include <SFML\Graphics.hpp>
 
+
 movement::movement() {}
 movement::movement(GameData* gamedata)
 	:gameData(gamedata){}
@@ -9,62 +10,29 @@ void movement::movePlayer(b2Body* body, moveDir dir)
 {
 	if (dir == LEFT)
 	{
-		if (body->GetLinearVelocity().x == 0)
+		if (body->GetLinearVelocity().x == HAULT)
 			body->SetLinearVelocity(b2Vec2(-10, body->GetLinearVelocity().y));
-		if (body->GetLinearVelocity().x < -30)
-			body->SetLinearVelocity(b2Vec2(-30, body->GetLinearVelocity().y));
+		if (body->GetLinearVelocity().x < -(MAX_SPEED))
+			body->SetLinearVelocity(b2Vec2(-(MAX_SPEED), body->GetLinearVelocity().y));
 		else
 			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x - 1, body->GetLinearVelocity().y));
 
 	}
 	else if (dir == RIGHT)
 	{
-		if (body->GetLinearVelocity().x == 0)
-			body->SetLinearVelocity(b2Vec2(10, body->GetLinearVelocity().y));
-		else if (body->GetLinearVelocity().x > 30)
-			body->SetLinearVelocity(b2Vec2(30, body->GetLinearVelocity().y));
+		if (body->GetLinearVelocity().x == HAULT)
+			body->SetLinearVelocity(b2Vec2(NORMAL_SPEED, body->GetLinearVelocity().y));
+		else if (body->GetLinearVelocity().x > MAX_SPEED)
+			body->SetLinearVelocity(b2Vec2(MAX_SPEED, body->GetLinearVelocity().y));
 		else
 			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x + 1, body->GetLinearVelocity().y));
 	}
 	else if(dir == UP)
 	{
-		body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, 60));
+		body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, _JUMP));
 	}
 
 }
-
-//void movement::movePlayer(b2Body* body, moveDir dir)
-//{
-//	switch (dir)
-//	{
-//	case LEFT:
-//		if (body->GetLinearVelocity().x == 0)
-//			body->SetLinearVelocity(b2Vec2(-10, body->GetLinearVelocity().y));
-//		if (body->GetLinearVelocity().x < -30)
-//			body->SetLinearVelocity(b2Vec2(-30, body->GetLinearVelocity().y));
-//		else
-//			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x - 1, body->GetLinearVelocity().y));
-//		break;
-//
-//	case RIGHT:
-//
-//		if (body->GetLinearVelocity().x == 0)
-//			body->SetLinearVelocity(b2Vec2(10, body->GetLinearVelocity().y));
-//		else if (body->GetLinearVelocity().x > 30)
-//			body->SetLinearVelocity(b2Vec2(30, body->GetLinearVelocity().y));
-//		else
-//			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x + 1, body->GetLinearVelocity().y));
-//		break;
-//	case UP:
-//		body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, 60));
-//		break;
-//	case DOWN:
-//
-//		break;
-//
-//	}
-//
-//};
 
 
 void movement::moveZombie(b2Body*body, b2Vec2 speed)
@@ -82,11 +50,11 @@ void movement::moveZombie_default(b2Body* body, moveDir dir)
 	switch (dir)
 	{
 	case LEFT:
-		moveZombie(body,(b2Vec2(-30, body->GetLinearVelocity().y)));
+		moveZombie(body,(b2Vec2(-(MAX_SPEED), body->GetLinearVelocity().y)));
 		txt->setString("MOVE_LEFT");
 		break;
 	case RIGHT:
-		moveZombie(body, (b2Vec2(30, body->GetLinearVelocity().y)));
+		moveZombie(body, (b2Vec2(MAX_SPEED, body->GetLinearVelocity().y)));
 		txt->setString("MOVE_RIGHT");
 		break; 
 	case UP:

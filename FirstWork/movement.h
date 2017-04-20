@@ -3,7 +3,12 @@
 #include <Box2D\Box2D.h>
 #include "GameData.h"
 
+#define HAULT 0
 #define MAX_SPEED 40
+#define NORMAL_SPEED 10
+#define CHASE_PLAYER 60
+#define _JUMP 60
+
 enum zombieStatus {
 	Air,
 	Ground

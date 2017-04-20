@@ -159,10 +159,10 @@ applyBody::applyBody()
 {}
 
 TileMap applyBody::applyMapTile(const std::string& tileset, sf::Vector2u tileSize,
-	const int* tile, unsigned int width, unsigned int height, b2World* world, GameData* dataSample)
+	const int* tile, unsigned int width, unsigned int height, b2World* world, GameData* game_data)
 {
 	TileMap buildmap;
-	setGameData(dataSample);
+	setGameData(game_data);
 	if (!buildmap.load("tileset.jpg", sf::Vector2u(32, 32), tile,
 		20, 10, world, getGameData()))
 		exit(1);
@@ -173,41 +173,3 @@ void applyBody::setGameData(GameData* gameData)
 	save_data = *gameData;
 }
 GameData* applyBody::getGameData() { return &save_data; }
-
-//void applyBody::setPlyr(Player player) {
-//	_player = player;
-//}
-//
-//void applyBody::setZombie(zombie* zombiePtr)
-//{
-//	*(_zombies+zombieCount) = zombiePtr;
-//	zombieCount++;
-//}
-//
-//sf::Sprite applyBody::loadSprite(int obj)
-//{
-//	tmpTexture = load_Image.getCharTexture();
-//	switch (obj) {
-//	case 1:
-//		tmpSprite = load_Image.getCharSprite();
-//		break;
-//	case 2:
-//		tmpSprite = load_Image.getZombieSprite();
-//		break;
-//	case 3:
-//		break;
-//	case 4:
-//		break;
-//	}
-//
-//	return tmpSprite;
-//}
-//
-//zombie* applyBody::getZombie(int index)
-//{
-//	return *(_zombies + (index));
-//}
-//
-//sf::Texture applyBody::getTexture() { return tmpTexture; }
-//
-//Player applyBody::getPlayer() { return _player; }

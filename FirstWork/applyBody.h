@@ -47,18 +47,7 @@ public:
 	applyBody();
 	void setGameData(GameData* gameData);
 	GameData* getGameData();
-	//sf::Sprite loadSprite(int object);
-	//sf::Texture getTexture();
-	//void setPlyr(Player player);
-	//Player getPlayer();
-	//void setZombie(zombie* _zombie);
-	//zombie *getZombie(int index);
-	//int zombieCount;
 	
 private:
 	GameData save_data;
-	/*Player _player;
-	zombie** _zombies;
-	sf::Sprite tmpSprite;
-	sf::Texture tmpTexture;*/
 };
