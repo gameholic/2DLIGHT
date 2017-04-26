@@ -1,5 +1,7 @@
 /*
-Apply box2d body to all objects
+applyBody.cpp
+Descript:
+Should change the cpp name
 */
 
 #include <stdio.h>
@@ -80,6 +82,7 @@ bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize,
 				Player* plyr = new Player(_x, _y, 200.f, 0.05f);
 				plyr->setBody(b2_dynamicBody, true);
 				gameData->setPlayer(plyr);
+				gameData->setPlayerStatus(GROUND);
 
 			}
 			
@@ -96,6 +99,8 @@ bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize,
 				
 				z_1->setBody(b2_dynamicBody, true);
 				gameData->setZombie(z_1);
+				gameData->setZombiePhysicalStatus(GROUND);
+				gameData->setZombieActionStatus(DEFAULT);
 
 
 			}
@@ -153,23 +158,23 @@ void debugDraw::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)  
 
 	}
 
-
-applyBody::applyBody()
-	/*: zombieCount(0), _zombies(new zombie*[3])*/
-{}
-
-TileMap applyBody::applyMapTile(const std::string& tileset, sf::Vector2u tileSize,
-	const int* tile, unsigned int width, unsigned int height, b2World* world, GameData* game_data)
-{
-	TileMap buildmap;
-	setGameData(game_data);
-	if (!buildmap.load("tileset.jpg", sf::Vector2u(32, 32), tile,
-		20, 10, world, getGameData()))
-		exit(1);
-	return buildmap;
-}
-void applyBody::setGameData(GameData* gameData)
-{
-	save_data = *gameData;
-}
-GameData* applyBody::getGameData() { return &save_data; }
+//
+//applyBody::applyBody()
+//	/*: zombieCount(0), _zombies(new zombie*[3])*/
+//{}
+//
+//TileMap applyBody::applyMapTile(const std::string& tileset, sf::Vector2u tileSize,
+//	const int* tile, unsigned int width, unsigned int height, b2World* world, GameData* game_data)
+//{
+//	TileMap buildmap;
+//	setGameData(game_data);
+//	if (!buildmap.load("tileset.jpg", sf::Vector2u(32, 32), tile,
+//		20, 10, world, getGameData()))
+//		exit(1);
+//	return buildmap;
+//}
+//void applyBody::setGameData(GameData* gameData)
+//{
+//	save_data = *gameData;
+//}
+//GameData* applyBody::getGameData() { return &save_data; }

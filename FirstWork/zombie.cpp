@@ -1,6 +1,7 @@
 #pragma once
 /*
 zombie.cpp
+descript: same as Player.cpp. Using AvatarProperty, zombie class save information of each zombie.
 */
 #include "zombie.h"
 #include "global.h"
@@ -64,11 +65,20 @@ sf::Texture zombie::getTexture() { return z_Texture; }
 b2Body* zombie::getBody() { return z_body; }
 b2Vec2 zombie::getOriPosition() { return ori_position; }
 
-void zombie::setStatus(Avatar_Status a_status) 
+void zombie::setPhysicalStatus(Physical_Status a_status) 
 {
-	currentStatus = a_status;
+	c_PhysicalStatus = a_status;
 }
-Avatar_Status zombie::getStatus() 
+Physical_Status zombie::getPhysicalStatus() 
 {
-	return currentStatus;
+	return c_PhysicalStatus;
+}
+
+void zombie::setActionStatus(Action_Status a_status)
+{
+	c_ActionStatus = a_status;
+}
+Action_Status zombie::getActionStatus()
+{
+	return c_ActionStatus;
 }

@@ -17,15 +17,18 @@ public:
 	b2Body* getBody();
 	sf::Text *getText();
 	b2Vec2 getOriPosition();
-	void setStatus(Avatar_Status a_status);
-	Avatar_Status getStatus();
+	void setPhysicalStatus(Physical_Status a_status);
+	Physical_Status getPhysicalStatus();
+	void setActionStatus(Action_Status a_status);
+	Action_Status getActionStatus();
 
 	float leftEnd, rightEnd, currentX, currentY;
 private:
 	int zombieType;
 	b2Body* z_body;
 	AvatarProperty zombieProperty;
-	Avatar_Status currentStatus;
+	Physical_Status c_PhysicalStatus;
+	Action_Status c_ActionStatus;
 	loadImage imageLoad;
 	sf::Sprite z_Sprite;
 	sf::Texture z_Texture;

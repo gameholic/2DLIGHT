@@ -1,7 +1,10 @@
 #include "movement.h"
 #include "global.h"
 #include <SFML\Graphics.hpp>
-
+/*
+movement.cpp
+Descript: Codes that moves the avatar. Basic orders are written and helps
+other functions to move characters easily. Made to avoid redundancy*/
 
 movement::movement() {}
 movement::movement(GameData* gamedata)
@@ -60,6 +63,27 @@ void movement::moveZombie_default(b2Body* body, moveDir dir)
 	case UP:
 		jumpZombie(body);
 		txt->setString("JUMP");
+		break;
+	}
+}
+
+void movement::moveZombie_chase(b2Body* body, moveDir dir)
+{
+
+	sf::Text* txt = gameData->getZombie(_index)->getText();
+	switch (dir)
+	{
+	case LEFT:
+		moveZombie(body,(b2Vec2(-(CHASE_PLAYER), body->GetLinearVelocity().y)));
+		txt->setString("CHASE_LEFT");
+		break;
+	case RIGHT:
+		moveZombie(body, (b2Vec2(CHASE_PLAYER, body->GetLinearVelocity().y)));
+		txt->setString("CHASE_RIGHT");
+		break; 
+	case UP:
+		jumpZombie(body);
+		txt->setString("CHASE_JUMP");
 		break;
 	}
 }

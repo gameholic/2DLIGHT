@@ -21,123 +21,72 @@ Main cpp
 #include "loadImage.h"
 #include "GameData.h"
 #include "Avatar_Status.h"
+#include "Collision_Detaction.h"
 
 
 sf::RenderWindow window(sf::VideoMode(1200, 600), "First game");
 b2World* world;
 //applyBody bodyApplier;
 sf::Font font;
-
-static Avatar_Status player_status = GROUND;
-static Avatar_Status zombie_Status = GROUND;
-typedef void(*collision_handler)();
-
-collision_handler table[10][10] = { nullptr, };
-
-class MyContactListener : public b2ContactListener {
-	
-	void BeginContact(b2Contact* contact)
-	{
-		void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
-	
-		if (bodyUserData)
-		{
-		}
-			
-		void* bodyUserData2 = contact->GetFixtureB()->GetBody()->GetUserData();
-		if (bodyUserData2)
-		{
-		}
-
-		collision_handler handler = table[(int)bodyUserData][(int)bodyUserData2];
-
-		if (handler != nullptr)
-			handler();
-		b2Fixture* fixtureA = contact->GetFixtureA();
-		b2Fixture* fixtureB = contact->GetFixtureB();
-		b2Body* body1 = fixtureA->GetBody();
-		b2Body* body2 = fixtureB->GetBody();
-	}
-	
-
-	void EndContact(b2Contact* contact)
-	{
-	
-	}	
-};
-
-void on_zombie_human_collide()
-{
-	player_status = DEAD;
-}
-void human_ground_collide()
-{
-	player_status = GROUND;
-}
+//
+//static Physical_Status plyr_physical_status = GROUND;
+//typedef void(*collision_handler)();
+//
+//collision_handler table[10][10] = { nullptr, };
+//
+//class MyContactListener : public b2ContactListener {
+//	
+//	void BeginContact(b2Contact* contact)
+//	{
+//		void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
+//	
+//		if (bodyUserData)
+//		{
+//		}
+//			
+//		void* bodyUserData2 = contact->GetFixtureB()->GetBody()->GetUserData();
+//		if (bodyUserData2)
+//		{
+//		}
+//
+//		collision_handler handler = table[(int)bodyUserData][(int)bodyUserData2];
+//
+//		if (handler != nullptr)
+//			handler();
+//		b2Fixture* fixtureA = contact->GetFixtureA();
+//		b2Fixture* fixtureB = contact->GetFixtureB();
+//		b2Body* body1 = fixtureA->GetBody();
+//		b2Body* body2 = fixtureB->GetBody();
+//	}
+//	
+//
+//	void EndContact(b2Contact* contact)
+//	{
+//	
+//	}	
+//};
+//
+//void on_zombie_human_collide()
+//{
+//	plyr_physical_status = DEAD;
+//}
+//void human_ground_collide()
+//{
+//	plyr_physical_status = GROUND;
+//}
 
 sf::VertexArray* vertices;
 bool detact = false;
 bool detactWall = false;
 
-//
-//void drawReflectedRay(b2Vec2 p1, b2Vec2 p2)
-//{
-//	//set up input
-//	b2RayCastInput input;
-//	input.p1 = p1;
-//	input.p2 = p2;
-//	input.maxFraction = 1;
-//	
-//	//check every fixture of every body to find closest
-//	float closestFraction = 1; //start with end of line as p2
-//	b2Vec2 intersectionNormal(0, 0);
-//	b2Vec2 intersectionPoint(0, 0);
-//	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext()) {
-//		for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
-//
-//			b2RayCastOutput output;
-//			if (!f->RayCast(&output, input,0))
-//				continue;
-//			if (output.fraction < closestFraction) {
-//				closestFraction = output.fraction;
-//				intersectionNormal = output.normal;
-//			}
-//
-//			if (b->GetUserData() == (int*)1)
-//				detact = true;
-//			else if (b->GetUserData() == (int*)4)
-//			{
-//				detactWall = true;
-//			}
-//		}
-//	}
-//	intersectionPoint = p1 + closestFraction * (p2 - p1);
-//
-//	vertices->append(sf::Vertex(sf::Vector2f(p1.x, p1.y)));
-//	vertices->append(sf::Vertex(sf::Vector2f(intersectionPoint.x, intersectionPoint.y)));
-//	if (closestFraction == 1)
-//		return; //ray hit nothing so we can finish here
-//	if (closestFraction == 0)
-//		return;
-//	//still some ray left to reflect
-//
-//	b2Vec2 remainingRay = (p2 - intersectionPoint);
-//	b2Vec2 projectedOntoNormal = b2Dot(remainingRay, intersectionNormal) * intersectionNormal;
-//	b2Vec2 nextp2 = p2 - 2 * projectedOntoNormal;
-//
-//	//recurse
-//
-//}
-
-
 int main()
 {
-	table[1][2] = table[2][1] = on_zombie_human_collide;
-	table[1][0] = table[0][1] = human_ground_collide;
-	
+	//table[1][2] = table[2][1] = on_zombie_human_collide;
+	//table[1][0] = table[0][1] = human_ground_collide;
+	font.loadFromFile("arial.ttf");
+
 
 	GameData* gameData = new GameData();
-	font.loadFromFile("arial.ttf");
 	
 	b2Vec2 gravity(0.0f, -80.f);
 	world = new b2World(gravity);
@@ -145,9 +94,7 @@ int main()
 	TileMap buildmap;
 	maps tilemap;
 	int *tile = tilemap.getmap();
-	/*TileMap buildmap= bodyApplier.applyMapTile(
-		"tileset.jpg", sf::Vector2u(32, 32), tile, 20, 10,
-		world, gameData);*/
+
 	if(!buildmap.load("tileset.jpg", sf::Vector2u(32, 32), tile, 20, 10,
 		world, gameData))
 		exit(1);
@@ -159,8 +106,10 @@ int main()
 	debugDraw draw;
 	movement move(gameData);
 	zombieAI zombie_AI(gameData, move);
-	MyContactListener contactListener;
-	world->SetContactListener(&contactListener);
+ 	Collision_Detaction collisionListener(gameData);
+	world->SetContactListener(&collisionListener);
+	/*MyContactListener contactListener;
+	world->SetContactListener(&contactListener);*/
 	auto mapHeight = buildmap.getScale().y * 10*32;
 	/////////////////////////////////////
 	sf::View view2;
@@ -189,10 +138,34 @@ int main()
 	///////////////////////////////////////
 
 
+	
 	while (window.isOpen())  //open window	
 	{
-		float rayLength = 50;
+		Physical_Status
+			plyr_physical_status = gameData->getPlayerStatus();
+		sf::Text* txt = gameData->getPlayer()->getText();
+		txt->setPosition(_sprite->getPosition());
+		//txt->setPosition(sf::Vector2f(30.f, 50.f));
+		switch (plyr_physical_status)
+		{
+		case GROUND:
+			txt->setString("GROUND");
+			break;
+		case DEAD:
+			txt->setString("DEAD");
+			break;
+		case JUMP:
+			txt->setString("JUMP");
+			break;
+		}
 
+
+		if (plyr_physical_status == DEAD)
+		{
+			body->SetTransform(b2Vec2(150.f, 50.f), 0);
+			gameData->setPlayerStatus(JUMP);
+		}
+		float rayLength = 50;
 		vertices = zombie_AI.getVertices();
 		vertices->clear();
 
@@ -206,7 +179,7 @@ int main()
 		for (int i = 0; i < gameData->zombie_count; i++)
 		{
 			b2Body* z_body = gameData->getZombie(i)->getBody();
-			gameData->setIndex(i);
+			     gameData->setIndex(i);
 			zombie_AI.zombie_AI(body);
 
 			sf::Sprite* z_sprite = gameData->getZombie(i)->getSprite();
@@ -216,13 +189,10 @@ int main()
 
 			sf::Text* dbug = gameData->getZombie(i)->getText();
 			dbug->setPosition(z_sprite->getPosition());
+
 		}
 		
-		if (player_status == DEAD)
-		{
-			body->SetTransform(b2Vec2(100.f, 50.f), 0);
-			player_status = JUMP;
-		}
+	
 		world->Step(timestep, velocityIterations, positionIterations);
 		while (window.pollEvent(event))
 		{
@@ -253,25 +223,25 @@ int main()
 		for (int i = 0; i < gameData->zombie_count; i++)
 		{
 			b2Body* z_body = gameData->getZombie(i)->getBody();
-			zombie* _zombie1 = gameData->getZombie(i);
+			zombie* _zombie_ = gameData->getZombie(i);
 			gameData->setIndex(i);
 			if (!zombie_AI.status.detact_player)
 			{
 					
-				if (z_body->GetPosition().x > _zombie1->leftEnd	&&
-					z_body->GetPosition().x < _zombie1->rightEnd)
-					zombie_AI.defaultPatrol(z_body, _zombie1,b2Vec2(0,0));
+				if (z_body->GetPosition().x > _zombie_->leftEnd	&&
+					z_body->GetPosition().x < _zombie_->rightEnd)
+					zombie_AI.defaultPatrol(z_body, _zombie_,b2Vec2(0,0));
 
-				else if (z_body->GetPosition().x <= _zombie1->leftEnd)
-					zombie_AI.defaultPatrol(z_body, _zombie1, b2Vec2(CHASE_PLAYER, z_body->GetLinearVelocity().y));
+				else if (z_body->GetPosition().x <= _zombie_->leftEnd)
+					zombie_AI.defaultPatrol(z_body, _zombie_, b2Vec2(CHASE_PLAYER, z_body->GetLinearVelocity().y));
 			
-				else if (z_body->GetPosition().x >= _zombie1->rightEnd)
-					zombie_AI.defaultPatrol(z_body, _zombie1, b2Vec2(-(CHASE_PLAYER), z_body->GetLinearVelocity().y));
+				else if (z_body->GetPosition().x >= _zombie_->rightEnd)
+					zombie_AI.defaultPatrol(z_body, _zombie_, b2Vec2(-(CHASE_PLAYER), z_body->GetLinearVelocity().y));
 
 			}
 			else
 			{
- 				zombie_AI.chase(z_body, body);
+				zombie_AI.chase(z_body, body);
 			}
 		}
 		////////////////////////////////////
@@ -294,13 +264,13 @@ int main()
 			move.movePlayer(body, RIGHT);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
-			switch (player_status)
+			switch (plyr_physical_status)
 			{
 			case JUMP:
 				break;
 			case GROUND:
 				move.movePlayer(body, UP);
-				player_status = JUMP;
+				gameData->setPlayerStatus(JUMP);
 				break;
 			}
 		}
@@ -320,6 +290,7 @@ int main()
 		}
 		window.draw(*_sprite);
 		//window.draw(testSprite);
+		window.draw(*txt);
 		window.display();
 	}
 }

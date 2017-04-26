@@ -2,6 +2,8 @@
 
 /*
 AvatarProperty.cpp
+Descript: save geometry information about avatar(zombies and players)
+and send those informations to external if necessary.
 */
 void AvatarProperty::setPosition(float x, float y) {
 	position.x = x;

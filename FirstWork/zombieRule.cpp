@@ -1,3 +1,10 @@
+/*
+zombieRule.cpp
+Descript: Restrict zombies action to prevent unexpected movements and enable to make game works well.
+All the functions that check zombies' action are in this class.
+These rules are applied to every zombies by zombieAI.
+*/
+
 #include "zombieRule.h"
 #include "global.h"
 zombieRule::zombieRule(){}

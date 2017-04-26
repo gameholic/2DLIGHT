@@ -16,14 +16,15 @@ public:
 	sf::Texture getTexture();
 	void setBody(b2BodyType bodyType, bool fixRotation);
 	b2Body* getBody();
-	void setStatus(Avatar_Status a_Status);
-	Avatar_Status getStatus();
-
+	void setStatus(Physical_Status a_Status);
+	Physical_Status getStatus();
+	sf::Text *getText();
 private:
 	b2Body* plyBody;
 	AvatarProperty plyProperty;
-	Avatar_Status currentStatus;
+	Physical_Status currentStatus;
 	loadImage imageLoad;
 	sf::Sprite plySprite;
 	sf::Texture plyTexture;
+	sf::Text p_txt;
 };

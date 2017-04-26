@@ -1,5 +1,7 @@
 /*
 zombieAI.cppp
+Descript: Orders for zombies are written here. 
+all zombies are moving, changing actions and status through here
 */
 
 #define _USE_MATH_DEFINES
@@ -10,8 +12,7 @@ zombieAI.cppp
 
 
 zombieAI::zombieAI(GameData* _gamedata, movement _move)
-	:gameData(_gamedata), move(_move),rule(_gamedata), _Chase(_move){
-
+	:gameData(_gamedata), move(_move),rule(_gamedata), _Chase(_move,_gamedata){
 	//zombieRule rule(gameData);
 }
 
@@ -121,16 +122,19 @@ void zombieAI::zombie_AI(b2Body* p_body)
 		{
 		case 1:
 			status.detact_player = true;
-			continue;
-			/*
+			break;
+			
 		case 4:
 			status.detact_wall = true;
-			continue;*/
+			break;
 		default:
 			status.detact_player = false;
 			status.detact_wall = false;
 			break;
 		}
+
+		if ((int)_value == 1)
+			break;
 	}
 
 }
@@ -174,4 +178,5 @@ void zombieAI::runToGoal(b2Body * zombie, b2Vec2 dest_position)
 void zombieAI::chase(b2Body * z_body, b2Body * p_body)
 {
 	_Chase.chase(z_body, p_body, status);
+	
 }

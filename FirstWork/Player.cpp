@@ -1,13 +1,20 @@
 #include "Player.h"
 #include "global.h"
+
+/*
+Player.cpp
+Descript: Include all data about player using AvatarProperty.cpp and enable other classes to get information.
+*/
 Player::Player( float _x, float _y, float _density, float _friction) 
 {
-	plySprite = imageLoad.getPlyrSprite();
+ 	plySprite = imageLoad.getPlyrSprite();
 	plyTexture = imageLoad.getCharTexture();
 	
 	float _width = plySprite.getScale().x*plyTexture.getSize().x / 2;
 	float _height = plySprite.getScale().y*plyTexture.getSize().y / 2;
-	
+	p_txt.setFont(font);
+	p_txt.setString("STATUS");
+	p_txt.setScale(sf::Vector2f(0.5f, -1));
 	plyProperty.setPosition(_x, _y);
 	plyProperty.setBoxSize(_width, _height);
 	plyProperty.setPhysics(_density, _friction);
@@ -56,12 +63,16 @@ b2Body* Player::getBody() {
 
 }
 
-void Player::setStatus(Avatar_Status a_status)
+void Player::setStatus(Physical_Status a_status)
 {
 	currentStatus = a_status;
 }
-Avatar_Status Player::getStatus()
+Physical_Status Player::getStatus()
 {
 	return currentStatus;
 }
 
+sf::Text *Player::getText()
+{
+	return &p_txt;
+}
